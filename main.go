@@ -8,15 +8,17 @@ import (
 )
 
 type model struct {
-	choices  []string         // items on the to-do list
-	cursor   int              // which to-do list item our cursor is pointing at
-	selected map[int]struct{} // which to-do items are selected
+	choices  []string         // choices of available functions
+	cursor   int              // which choices our cursor is pointing at
+	selected map[int]struct{} // which choices are selected
 }
 
 func initialModel() model {
 	return model{
-		// Our to-do list is a grocery list
-		choices: []string{"Buy carrots", "Buy celery", "Buy kohlrabi"},
+		// list of choices that the user can select from
+		choices: []string{"Add Card", "Move Card", "Delete Card", "List Cards", "Exit"},
+
+		// Decks, Collection, Binders, Wish List, Package?
 
 		// A map which indicates which choices are selected. We're using
 		// the  map like a mathematical set. The keys refer to the indexes
@@ -43,14 +45,14 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "ctrl+c", "q":
 			return m, tea.Quit
 
-		// The "up" and "k" keys move the cursor up
-		case "up", "k":
+		// The "up" key moves the cursor up
+		case "up":
 			if m.cursor > 0 {
 				m.cursor--
 			}
 
-		// The "down" and "j" keys move the cursor down
-		case "down", "j":
+		// The "down" key moves the cursor down
+		case "down":
 			if m.cursor < len(m.choices)-1 {
 				m.cursor++
 			}
@@ -74,7 +76,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) View() string {
 	// The header
-	s := "What should we buy at the market?\n\n"
+	s := "What would you like to do?\n\n"
 
 	// Iterate over our choices
 	for i, choice := range m.choices {
